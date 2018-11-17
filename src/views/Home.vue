@@ -81,7 +81,7 @@
             :label="calendar.name"
             v-model="calendar.active"
           ></v-checkbox>
-          <health-tracker></health-tracker>
+          <health-tracker :state="state"></health-tracker>
         </div>
       </template>
 
@@ -121,10 +121,6 @@ export default {
         name: 'Eating',
         active: true,
       },
-      {
-        name: 'US Holidays',
-        active: true,
-      }
     ],
     app: null,
     ignore: false,
@@ -195,7 +191,7 @@ export default {
 
     saveState() {
       this.state = this.calendar.toInput(true);
-      localStorage.setItem(this.storeKey, JSON.stringify(this.state));
+      // localStorage.setItem(this.storeKey, JSON.stringify(this.state));
     },
 
     loadState() {

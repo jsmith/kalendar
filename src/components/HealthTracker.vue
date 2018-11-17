@@ -11,16 +11,16 @@
       <div class="ring">
         <progress-ring
             :size="80"
-            :progress="80"
-            :total="100"
+            :progress="eatingTotal"
+            :total="physicalActivitesTotal + eatingTotal"
             icon="restaurant">
         </progress-ring>
       </div>
       <div class="ring">
         <progress-ring
             :size="80"
-            :progress="60"
-            :total="100"
+            :progress="physicalActivitesTotal"
+            :total="physicalActivitesTotal + eatingTotal"
             icon="directions_run">
         </progress-ring>
       </div>   
@@ -32,17 +32,17 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import ProgressRing from '@/components/ProgressRing.vue';
 
 interface Event {
-    data: {
-          title: string,
-          color: string,
-          calendar?: string,
-      },
-      schedule: {
-          dayOfWeek: string[],
-          times: number[],
-          duration: number,
-          durationUnit: string,
-      },
+  data: {
+    title: string,
+    color: string,
+    calendar?: string,
+  },
+  schedule: {
+    dayOfWeek: number[],
+    times: number[],
+    duration: number,
+    durationUnit: string,
+  },
 }
 
 interface State {
@@ -55,17 +55,36 @@ interface State {
 export default class HealthTracker extends Vue {
   @Prop({type: Object}) public state!: State;
 
+    public get events() {
+      return this.state.events.filter(event => event.schedule.dayOfWeek)
+    }
+
+    public get today() {
+      return this.events.filter(event => event.schedule.dayOfWeek.includes(this.dayOfWeek))
+    }
+
+    public get activities() {
+      return this.today.filter(event => event.data.calendar === 'Physical Activities')
+    }
+
+    public get eating() {
+      return this.today.filter(event => event.data.calendar === 'Eating')
+    }
+
+    public get dayOfWeek() {
+      var d = new Date();
+      return d.getDay()
+    }
+
+    public get tomorrow() {
+      return this.events.filter(event => event.schedule.dayOfWeek.includes(this.dayOfWeek))
+    }
+
     get physicalActivitesTotal() {
         let totalTime = 0;
-        let scaleFactor = 1;
 
-        this.state.events.forEach(event => {
-            if (event.data.calendar === 'Physical Activities') {
-                scaleFactor = event.schedule.durationUnit === 'days' ? 24:
-                              event.schedule.durationUnit ===  'hours' ? 60: 1;
-            }
-
-            totalTime += event.schedule.duration * scaleFactor;
+        this.activities.forEach(event => {
+            totalTime += event.schedule.times.length * event.schedule.duration;
         });
 
         return totalTime;
@@ -73,15 +92,9 @@ export default class HealthTracker extends Vue {
 
     get eatingTotal() {
         let totalTime = 0;
-        let scaleFactor = 1;
 
-        this.state.events.forEach(event => {
-            if (event.data.calendar === 'Eating') {
-                scaleFactor = event.schedule.durationUnit === 'days' ? 24:
-                              event.schedule.durationUnit ===  'hours' ? 60: 1;
-            }
-
-            totalTime += event.schedule.duration * scaleFactor;
+        this.eating.forEach(event => {
+            totalTime += event.schedule.times.length * event.schedule.duration;
         });
 
         return totalTime;

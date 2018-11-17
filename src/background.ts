@@ -1,5 +1,6 @@
 'use strict';
 
+import path from 'path';
 import { app, protocol, BrowserWindow } from 'electron';
 import menu from 'electron-context-menu';
 import {
@@ -16,7 +17,11 @@ let win: BrowserWindow | null;
 protocol.registerStandardSchemes(['app'], { secure: true });
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600 });
+  win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    icon: path.join(__dirname, 'assets/logo.png'),
+  });
 
   if (isDevelopment || process.env.IS_TEST) {
     // Load the url of the dev server if in development mode
