@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app id="dayspan" v-cloak>
-      <ds-calendar-app :calendar="calendar"></ds-calendar-app>
+      <home></home>
     </v-app>
   </div>
 </template>
@@ -9,8 +9,11 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Calendar } from 'dayspan';
+import Home from '@/views/Home.vue'
 
-@Component
+@Component({
+  components: { Home }
+})
 export default class App extends Vue {
     public calendar = Calendar.months();
 }
