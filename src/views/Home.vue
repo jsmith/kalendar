@@ -1,8 +1,10 @@
 <template>
   <v-app id="dayspan" v-cloak>
 
-    <ds-calendar-app ref="app"
+    <ds-calendar-app 
+      ref="app"
       class="calendar-app"
+      :class="{'calendar-active': sidebarActive}"
       :calendar="calendar"
       :read-only="readOnly"
       @change="saveState"
@@ -54,9 +56,13 @@
 
       <template slot="drawerBottom">
         <div class="pa-3 calendar-slot">
-          <div v-for="calendar in calendards" :key="calendar">
-            <span class="calendar-text">{{ calendar }}</span>
-          </div>
+          <v-checkbox
+            v-for="calendar in calendars" 
+            :key="calendar.name"
+            style="margin: 0"
+            :label="calendar.name"
+            v-model="calendar.active"
+          ></v-checkbox>
         </div>
       </template>
 
@@ -78,12 +84,32 @@ export default {
     calendar: Calendar.months(),
     readOnly: false,
     defaultEvents: Default,
-    calendards: ['US Holidays', 'Jacob']
+    calendars: [
+      {
+        name: 'US Holidays',
+        active: true
+      }, 
+      {
+        name: 'Jacob',
+        active: true
+      },
+    ],
+    app: null,
   }),
 
   mounted() {
-    window.app = this.$refs.app;
+    window.app = this.app = this.$refs.app;
     this.loadState();
+  },
+
+  computed: {
+    sidebarActive () {
+      if (!this.app) {
+        return true;
+      }
+
+      return this.app.drawer;
+    }
   },
 
   methods: {
@@ -160,10 +186,13 @@ body, html, #app, #dayspan
 </style>
 
 <style lang="sass">
-.ds-app-calendar-toolbar
+.calendar-active .ds-app-calendar-toolbar
   padding-left: 300px!important
 
 .v-navigation-drawer
   margin-top: 0!important
   z-index: 100!important
+
+.v-input__slot
+  margin: 0!important
 </style>
