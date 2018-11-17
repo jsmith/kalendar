@@ -102,15 +102,24 @@ export default {
     defaultEvents: Default,
     calendars: [
       {
-        name: 'US Holidays',
+        name: 'School',
         active: true,
       },
       {
-        name: 'Jacob',
+        name: 'Personal Schedule',
+        active: true,
+      },
+      {
+        name: 'Physical Activities',
+        active: true,
+      },
+      {
+        name: 'Eating',
         active: true,
       },
     ],
     app: null,
+    state: {},
   }),
 
   mounted() {
@@ -147,8 +156,8 @@ export default {
     },
 
     saveState() {
-      const state = this.calendar.toInput(true);
-      const json = JSON.stringify(state);
+      this.state = this.calendar.toInput(true);
+      const json = JSON.stringify(this.state);
 
       localStorage.setItem(this.storeKey, json);
     },
@@ -177,6 +186,7 @@ export default {
         ev.data = Vue.util.extend( defaults, ev.data );
       });
 
+      this.state = state;
       this.app.setState( state );
     },
   },
