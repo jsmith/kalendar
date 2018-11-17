@@ -1,6 +1,5 @@
 <template>
   <v-app id="dayspan" v-cloak>
-
     <ds-calendar-app 
       ref="app"
       class="calendar-app"
@@ -73,6 +72,12 @@
             :label="calendar.name"
             v-model="calendar.active"
           ></v-checkbox>
+          <div class="progress-rings"> 
+            <progress-ring
+              :progress="30"
+              :total="100">
+            </progress-ring>
+          </div>
         </div>
       </template>
 
@@ -83,12 +88,13 @@
 
 <script>
 import { Calendar, Weekday, Month } from 'dayspan';
+import ProgressRing from '@/components/ProgressRing.vue'
 import Default from '@/default';
 import Vue from 'vue';
 
 export default {
   name: 'app',
-
+  components: { ProgressRing },
   data: () => ({
     storeKey: 'dayspanState',
     calendar: Calendar.months(),
