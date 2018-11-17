@@ -4,7 +4,9 @@
       :value="percentage"
       :color="color"
       :size="size"
-    ></v-progress-circular>
+    >
+     <v-icon>{{icon}}</v-icon>
+    </v-progress-circular>
   </div>
 </template>
 
@@ -16,6 +18,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class ProgressRing extends Vue {
   @Prop({type: Number}) public progress!: number;
   @Prop({type: Number}) public total!: number;
+  @Prop({type: String}) public icon!: string;
   @Prop({type: Number, default: 50}) public size!: number;
 
   get percentage() {
@@ -29,6 +32,6 @@ export default class ProgressRing extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="sass">
 
 </style>
