@@ -2,9 +2,11 @@
   <v-app id="dayspan" v-cloak>
 
     <ds-calendar-app ref="app"
+      class="calendar-app"
       :calendar="calendar"
       :read-only="readOnly"
-      @change="saveState">
+      @change="saveState"
+    >
 
       <template slot="title">
         Kalendar
@@ -20,28 +22,29 @@
 
       <template slot="eventPopover" slot-scope="slotData">
         <ds-calendar-event-popover
-            v-bind="slotData"
-            :read-only="readOnly"
-            @finish="saveState"
+          v-bind="slotData"
+          :read-only="readOnly"
+          @finish="saveState"
         ></ds-calendar-event-popover>
       </template>
 
       <template slot="eventCreatePopover" slot-scope="{placeholder, calendar, close}">
         <ds-calendar-event-create-popover
-            :calendar-event="placeholder"
-            :calendar="calendar"
-            :close="$refs.app.$refs.calendar.clearPlaceholder"
-            @create-edit="$refs.app.editPlaceholder"
-            @create-popover-closed="saveState"
+          :calendar-event="placeholder"
+          :calendar="calendar"
+          :close="$refs.app.$refs.calendar.clearPlaceholder"
+          @create-edit="$refs.app.editPlaceholder"
+          @create-popover-closed="saveState"
         ></ds-calendar-event-create-popover>
       </template>
 
       <template slot="eventTimeTitle" slot-scope="{calendarEvent, details}">
         <div>
           <v-icon class="ds-ev-icon"
-                  v-if="details.icon"
-                  size="14"
-                  :style="{color: details.forecolor}">
+            v-if="details.icon"
+            size="14"
+            :style="{color: details.forecolor}"
+          >
             {{ details.icon }}
           </v-icon>
           <strong class="ds-ev-title">{{ details.title }}</strong>
@@ -50,11 +53,10 @@
       </template>
 
       <template slot="drawerBottom">
-        <div class="pa-3">
-          <v-checkbox
-              label="Read Only?"
-              v-model="readOnly"
-          ></v-checkbox>
+        <div class="pa-3 calendar-slot">
+          <div v-for="calendar in calendards" :key="calendar">
+            <span class="calendar-text">{{ calendar }}</span>
+          </div>
         </div>
       </template>
 
@@ -75,7 +77,8 @@ export default {
     storeKey: 'dayspanState',
     calendar: Calendar.months(),
     readOnly: false,
-    defaultEvents: Default
+    defaultEvents: Default,
+    calendards: ['US Holidays', 'Jacob']
   }),
 
   mounted() {
@@ -92,12 +95,12 @@ export default {
 
       if (calendarEvent.start.minute !== 0)
       {
-          sh += calendarEvent.start.format(':mm');
+        sh += calendarEvent.start.format(':mm');
       }
 
       if (calendarEvent.end.minute !== 0)
       {
-          eh += calendarEvent.end.format(':mm');
+        eh += calendarEvent.end.format(':mm');
       }
 
       return (sa === ea) ? (sh + ' - ' + eh + ea) : (sh + sa + ' - ' + eh + ea);
@@ -140,17 +143,27 @@ export default {
 }
 </script>
 
-<style>
+<style lang="sass">
 
-  body, html, #app, #dayspan {
-    font-family: Roboto, sans-serif !important;
-    width: 100%;
-    height: 100%;
-  }
+body, html, #app, #dayspan
+  font-family: Roboto, sans-serif !important
+  width: 100%
+  height: 100%
 
-  .v-btn--flat,
-  .v-text-field--solo .v-input__slot {
-    background-color: #f5f5f5 !important;
-    margin-bottom: 8px !important;
-  }
+.v-btn--flat,
+.v-text-field--solo .v-input__slot
+  background-color: #f5f5f5 !important
+  margin-bottom: 8px !important
+
+.calendar-slot
+  text-align: left
+</style>
+
+<style lang="sass">
+.ds-app-calendar-toolbar
+  padding-left: 300px!important
+
+.v-navigation-drawer
+  margin-top: 0!important
+  z-index: 100!important
 </style>
