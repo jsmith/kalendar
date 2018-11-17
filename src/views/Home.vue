@@ -72,84 +72,71 @@ export default {
   name: 'app',
 
   data: () => ({
-      storeKey: 'dayspanState',
-      calendar: Calendar.months(),
-      readOnly: false,
-      defaultEvents: Default
+    storeKey: 'dayspanState',
+    calendar: Calendar.months(),
+    readOnly: false,
+    defaultEvents: Default
   }),
 
-  mounted()
-  {
-      window.app = this.$refs.app;
-
-      this.loadState();
+  mounted() {
+    window.app = this.$refs.app;
+    this.loadState();
   },
 
-  methods:
+  methods: {
+    getCalendarTime(calendarEvent) {
+      let sa = calendarEvent.start.format('a');
+      let ea = calendarEvent.end.format('a');
+      let sh = calendarEvent.start.format('h');
+      let eh = calendarEvent.end.format('h');
+
+      if (calendarEvent.start.minute !== 0)
       {
-          getCalendarTime(calendarEvent)
-          {
-              let sa = calendarEvent.start.format('a');
-              let ea = calendarEvent.end.format('a');
-              let sh = calendarEvent.start.format('h');
-              let eh = calendarEvent.end.format('h');
-
-              if (calendarEvent.start.minute !== 0)
-              {
-                  sh += calendarEvent.start.format(':mm');
-              }
-
-              if (calendarEvent.end.minute !== 0)
-              {
-                  eh += calendarEvent.end.format(':mm');
-              }
-
-              return (sa === ea) ? (sh + ' - ' + eh + ea) : (sh + sa + ' - ' + eh + ea);
-          },
-
-          saveState()
-          {
-              let state = this.calendar.toInput(true);
-              let json = JSON.stringify(state);
-
-              localStorage.setItem(this.storeKey, json);
-          },
-
-          loadState()
-          {
-              let state = {};
-
-              try
-              {
-                  let savedState = JSON.parse(localStorage.getItem(this.storeKey));
-
-                  if (savedState)
-                  {
-                      state = savedState;
-                      state.preferToday = false;
-                  }
-              }
-              catch (e)
-              {
-                  // eslint-disable-next-line
-                  console.log( e );
-              }
-
-              if (!state.events || !state.events.length)
-              {
-                  state.events = this.defaultEvents;
-              }
-
-              state.events.forEach(ev =>
-              {
-                  let defaults = this.$dayspan.getDefaultEventDetails();
-
-                  ev.data = Vue.util.extend( defaults, ev.data );
-              });
-
-              this.$refs.app.setState( state );
-          }
+          sh += calendarEvent.start.format(':mm');
       }
+
+      if (calendarEvent.end.minute !== 0)
+      {
+          eh += calendarEvent.end.format(':mm');
+      }
+
+      return (sa === ea) ? (sh + ' - ' + eh + ea) : (sh + sa + ' - ' + eh + ea);
+    },
+
+    saveState() {
+      let state = this.calendar.toInput(true);
+      let json = JSON.stringify(state);
+
+      localStorage.setItem(this.storeKey, json);
+    },
+
+    loadState() {
+      let state = {};
+
+      try {
+        let savedState = JSON.parse(localStorage.getItem(this.storeKey));
+
+        if (savedState) {
+          state = savedState;
+          state.preferToday = false;
+        }
+      } catch (e) {
+        // eslint-disable-next-line
+        console.log( e );
+      }
+
+      if (!state.events || !state.events.length) {
+        state.events = this.defaultEvents;
+      }
+
+      state.events.forEach(ev => {
+        let defaults = this.$dayspan.getDefaultEventDetails();
+        ev.data = Vue.util.extend( defaults, ev.data );
+      });
+
+      this.$refs.app.setState( state );
+    }
+  }
 }
 </script>
 
@@ -166,5 +153,4 @@ export default {
     background-color: #f5f5f5 !important;
     margin-bottom: 8px !important;
   }
-
 </style>
