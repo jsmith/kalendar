@@ -7,7 +7,7 @@
       @change="saveState">
 
       <template slot="title">
-        DaySpan
+        Kalendar
       </template>
 
       <template slot="menuRight">
