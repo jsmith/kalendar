@@ -7,7 +7,6 @@
       :class="{'calendar-active': sidebarActive}"
       :calendar="calendar"
       :read-only="readOnly"
-      @change="saveState"
     >
 
       <template slot="title">
@@ -26,7 +25,7 @@
         <ds-calendar-event-popover
           v-bind="slotData"
           :read-only="readOnly"
-          @finish="saveState"
+          @event-remove="remove"
         ></ds-calendar-event-popover>
       </template>
 
@@ -36,7 +35,7 @@
           :calendar="calendar"
           :close="$refs.app.$refs.calendar.clearPlaceholder"
           @create-edit="$refs.app.editPlaceholder"
-          @create-popover-closed="saveState"
+          @event-create="create"
         >
           <template slot="eventCreatePopoverCalendar" slot-scope="{ details }">
             <v-select
@@ -105,10 +104,16 @@ export default {
       },
     ],
     app: null,
+    state: null,
+    ignore: false,
   }),
 
   mounted() {
     window.app = this.app = this.$refs.app;
+
+    const eventDialog = this.app.$refs.eventDialog;
+    eventDialog.$on('event-update', this.update)
+
     this.loadState();
   },
 
@@ -119,10 +124,25 @@ export default {
       }
 
       return this.app.drawer;
+    },
+    calendarNames() {
+      return this.calendars.map(({ name }) => name)
     }
   },
 
   methods: {
+    create(o) {
+      console.log(o)
+      this.saveState()
+    },
+    update(o) {
+      console.log(o)
+      this.saveState()
+    },
+    remove(o) {
+      console.log(o)
+      this.saveState()
+    },
     getCalendarTime(calendarEvent) {
       let sa = calendarEvent.start.format('a');
       let ea = calendarEvent.end.format('a');
@@ -141,10 +161,17 @@ export default {
     },
 
     saveState() {
-      const state = this.calendar.toInput(true);
-      const json = JSON.stringify(state);
+      this.state = this.calendar.toInput(true);
 
-      localStorage.setItem(this.storeKey, json);
+      const events = this.state.events.filter((event) => {
+        if (!event.data.calendar) {
+          return true;
+        }
+        return this.calendarNames.includes(event.data.calendar)
+      })
+      // console.log(events);
+
+      localStorage.setItem(this.storeKey, JSON.stringify(this.state));
     },
 
     loadState() {
@@ -159,7 +186,7 @@ export default {
         }
       } catch (e) {
         // eslint-disable-next-line
-        console.log( e );
+        // console.error( e );
       }
 
       if (!state.events || !state.events.length) {
@@ -171,7 +198,8 @@ export default {
         ev.data = Vue.util.extend( defaults, ev.data );
       });
 
-      this.app.setState( state );
+      this.state = state;
+      this.app.setState(this.state);
     },
   },
 };
