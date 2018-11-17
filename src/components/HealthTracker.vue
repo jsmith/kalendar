@@ -11,16 +11,16 @@
       <div class="ring">
         <progress-ring
             :size="80"
-            :progress="eatingTotal"
-            :total="physicalActivitesTotal + eatingTotal"
+            :progress="80"
+            :total="100"
             icon="restaurant">
         </progress-ring>
       </div>
       <div class="ring">
         <progress-ring
             :size="80"
-            :progress="physicalActivitesTotal"
-            :total="physicalActivitesTotal + eatingTotal"
+            :progress="60"
+            :total="100"
             icon="directions_run">
         </progress-ring>
       </div>   

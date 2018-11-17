@@ -191,7 +191,7 @@ export default {
 
     saveState() {
       this.state = this.calendar.toInput(true);
-      // localStorage.setItem(this.storeKey, JSON.stringify(this.state));
+      localStorage.setItem(this.storeKey, JSON.stringify(this.state));
     },
 
     loadState() {
