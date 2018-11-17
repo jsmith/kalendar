@@ -152,7 +152,6 @@ export default {
 
   methods: {
     create(o) {
-      console.log('slkadfjsldkfj')
       this.state.events.push(o);
       this.app.setState(this.state);
       this.saveState()
@@ -233,7 +232,7 @@ export default {
         })
       }
     }
-  }
+  },
 };
 </script>
 
