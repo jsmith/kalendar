@@ -72,12 +72,7 @@
             :label="calendar.name"
             v-model="calendar.active"
           ></v-checkbox>
-          <div class="progress-rings"> 
-            <progress-ring
-              :progress="30"
-              :total="100">
-            </progress-ring>
-          </div>
+          <health-tracker></health-tracker>
         </div>
       </template>
 
@@ -88,13 +83,13 @@
 
 <script>
 import { Calendar, Weekday, Month } from 'dayspan';
-import ProgressRing from '@/components/ProgressRing.vue'
+import HealthTracker from '@/components/HealthTracker.vue'
 import Default from '@/default';
 import Vue from 'vue';
 
 export default {
   name: 'app',
-  components: { ProgressRing },
+  components: { HealthTracker },
   data: () => ({
     storeKey: 'dayspanState',
     calendar: Calendar.months(),
