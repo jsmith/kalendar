@@ -12,14 +12,6 @@
         Kalendar
       </template>
 
-      <template slot="menuRight">
-        <v-btn icon large href="https://github.com/ashlynmoody/UNBFQualifiers-Amir-Eldesoky" target="_blank">
-          <v-avatar size="32px" tile>
-            <img src="https://simpleicons.org/icons/github.svg" alt="Github">
-          </v-avatar>
-        </v-btn>
-      </template>
-
       <template slot="eventPopover" slot-scope="slotData">
         <ds-calendar-event-popover
           v-bind="slotData"
