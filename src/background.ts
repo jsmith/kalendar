@@ -1,6 +1,7 @@
 'use strict';
 
 import { app, protocol, BrowserWindow } from 'electron';
+import menu from 'electron-context-menu';
 import {
   createProtocol,
   installVueDevtools,
@@ -31,6 +32,20 @@ function createWindow() {
     win = null;
   });
 }
+
+
+
+menu({
+labels: {
+    cut: 'Configured Cut',
+    copy: 'Configured Copy',
+    paste: 'Configured Paste',
+    save: 'Configured Save Image',
+    copyLink: 'Configured Copy Link',
+    copyImageAddress: 'Configured Copy Image Address',
+    inspect: 'Configured Inspect',
+},
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
