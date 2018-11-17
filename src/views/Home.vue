@@ -121,6 +121,10 @@ export default {
         name: 'Eating',
         active: true,
       },
+      {
+        name: 'US Holidays',
+        active: true,
+      }
     ],
     app: null,
     ignore: false,
@@ -146,20 +150,30 @@ export default {
     },
     calendarNames() {
       return this.calendars.map(({ name }) => name)
+    },
+    activeLookup() {
+      const lookup = {};
+      this.calendars.map(({ name, active }) => {
+        lookup[name] = active;
+      })
+      return lookup;
     }
   },
 
   methods: {
     create(o) {
-      console.log(o)
+      this.state.events.push(o);
+      this.app.setState(this.state);
       this.saveState()
     },
     update(o) {
-      console.log(o)
+      this.state.events = this.state.events.find(event => event.data.title === o.data.title)
+      this.app.setState(this.state);
       this.saveState()
     },
     remove(o) {
-      console.log(o)
+      this.state.events = this.state.events.find(event => event.data.title !== o.data.title)      
+      this.app.setState(this.state);
       this.saveState()
     },
     getCalendarTime(calendarEvent) {
@@ -181,15 +195,6 @@ export default {
 
     saveState() {
       this.state = this.calendar.toInput(true);
-
-      const events = this.state.events.filter((event) => {
-        if (!event.data.calendar) {
-          return true;
-        }
-        return this.calendarNames.includes(event.data.calendar)
-      })
-      // console.log(events);
-
       localStorage.setItem(this.storeKey, JSON.stringify(this.state));
     },
 
@@ -253,6 +258,23 @@ export default {
 
     eventIsLate(calendarEvent) {
       return calendarEvent.start.hour < 3  || calendarEvent.end.hour < 5;
+    }
+  },
+  watch: {
+    calendars: {
+      deep: true,
+      handler () {
+        const events = this.state.events.filter((event) => {
+          if (!event.data.calendar) {
+            return true;
+          }
+          return this.activeLookup[event.data.calendar];
+        })
+        this.app.setState({
+          ...this.state,
+          events,
+        })
+      }
     }
   },
 };
