@@ -37,7 +37,17 @@
           :close="$refs.app.$refs.calendar.clearPlaceholder"
           @create-edit="$refs.app.editPlaceholder"
           @create-popover-closed="saveState"
-        ></ds-calendar-event-create-popover>
+        >
+          <template slot="eventCreatePopoverCalendar" slot-scope="{ details }">
+            <v-select
+              style="width: 100%"
+              single-line hide-details solo flat full-width
+              :items="calendars.map(({ name }) => name)"
+              label="Calendar"
+              v-model="details.calendar"
+            ></v-select>
+          </template>
+        </ds-calendar-event-create-popover>
       </template>
 
       <template slot="eventTimeTitle" slot-scope="{calendarEvent, details}">
@@ -73,7 +83,7 @@
 
 <script>
 import { Calendar, Weekday, Month } from 'dayspan';
-import Default from '@/default'
+import Default from '@/default';
 import Vue from 'vue';
 
 export default {
@@ -87,11 +97,11 @@ export default {
     calendars: [
       {
         name: 'US Holidays',
-        active: true
-      }, 
+        active: true,
+      },
       {
         name: 'Jacob',
-        active: true
+        active: true,
       },
     ],
     app: null,
@@ -119,13 +129,11 @@ export default {
       let sh = calendarEvent.start.format('h');
       let eh = calendarEvent.end.format('h');
 
-      if (calendarEvent.start.minute !== 0)
-      {
+      if (calendarEvent.start.minute !== 0) {
         sh += calendarEvent.start.format(':mm');
       }
 
-      if (calendarEvent.end.minute !== 0)
-      {
+      if (calendarEvent.end.minute !== 0) {
         eh += calendarEvent.end.format(':mm');
       }
 
@@ -133,8 +141,8 @@ export default {
     },
 
     saveState() {
-      let state = this.calendar.toInput(true);
-      let json = JSON.stringify(state);
+      const state = this.calendar.toInput(true);
+      const json = JSON.stringify(state);
 
       localStorage.setItem(this.storeKey, json);
     },
@@ -143,7 +151,7 @@ export default {
       let state = {};
 
       try {
-        let savedState = JSON.parse(localStorage.getItem(this.storeKey));
+        const savedState = JSON.parse(localStorage.getItem(this.storeKey));
 
         if (savedState) {
           state = savedState;
@@ -158,15 +166,15 @@ export default {
         state.events = this.defaultEvents;
       }
 
-      state.events.forEach(ev => {
-        let defaults = this.$dayspan.getDefaultEventDetails();
+      state.events.forEach((ev) => {
+        const defaults = this.$dayspan.getDefaultEventDetails();
         ev.data = Vue.util.extend( defaults, ev.data );
       });
 
-      this.$refs.app.setState( state );
-    }
-  }
-}
+      this.app.setState( state );
+    },
+  },
+};
 </script>
 
 <style lang="sass">
