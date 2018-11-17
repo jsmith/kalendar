@@ -304,6 +304,7 @@ body, html, #app, #dayspan
   margin-top: 0!important
   max-height: 100%!important
   z-index: 100!important
+  background-color: rgb(66, 66, 66)!important
 
 .v-input__slot
   margin: 0!important
@@ -317,4 +318,13 @@ body, html, #app, #dayspan
 
 .v-toolbar__content
   padding-left: 10px!important
+
+.v-btn--small .v-btn__content
+  color: #fff!important
+
+.v-navigation-drawer .calendar-slot .v-input--selection-controls .v-input__control .v-input__slot .v-label
+  color: #fff!important
+
+.v-progress-circular__info i
+  color: #ddd!important
 </style>
