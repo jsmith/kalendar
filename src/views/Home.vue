@@ -1,6 +1,5 @@
 <template>
   <v-app id="dayspan" v-cloak>
-
     <ds-calendar-app 
       ref="app"
       class="calendar-app"
@@ -72,6 +71,7 @@
             :label="calendar.name"
             v-model="calendar.active"
           ></v-checkbox>
+          <health-tracker></health-tracker>
         </div>
       </template>
 
@@ -82,12 +82,13 @@
 
 <script>
 import { Calendar, Weekday, Month } from 'dayspan';
+import HealthTracker from '@/components/HealthTracker.vue'
 import Default from '@/default';
 import Vue from 'vue';
 
 export default {
   name: 'app',
-
+  components: { HealthTracker },
   data: () => ({
     storeKey: 'dayspanState',
     calendar: Calendar.months(),
@@ -95,17 +96,25 @@ export default {
     defaultEvents: Default,
     calendars: [
       {
-        name: 'US Holidays',
+        name: 'School',
         active: true,
       },
       {
-        name: 'Jacob',
+        name: 'Personal Schedule',
+        active: true,
+      },
+      {
+        name: 'Physical Activities',
+        active: true,
+      },
+      {
+        name: 'Eating',
         active: true,
       },
     ],
     app: null,
-    state: null,
     ignore: false,
+    state: {},
   }),
 
   mounted() {
