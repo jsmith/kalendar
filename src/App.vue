@@ -4,15 +4,20 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
+    <v-app id="dayspan" v-cloak>
+      <ds-calendar-app :calendar="calendar"></ds-calendar-app>
+    </v-app>
     <router-view/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { Calendar } from 'dayspan';
 
 @Component
 export default class App extends Vue {
+    public calendar = Calendar.months();
 }
 </script>
 
@@ -34,4 +39,11 @@ export default class App extends Vue {
     }
   }
 }
+
+body, html, #app, #dayspan {
+  font-family: Roboto, sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
 </style>
