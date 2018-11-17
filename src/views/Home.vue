@@ -36,6 +36,24 @@
           @create-edit="$refs.app.editPlaceholder"
           @event-create="create"
         >
+          <template slot="eventCreatePopoverBodyTop" slot-scope="{ calendarEvent }">
+            <div v-if="eventHasConflict(calendarEvent, calendar)">
+              <div style="display: inline-block">
+                <v-icon large color="red">info</v-icon>
+              </div>
+              <div style="display: inline-block">
+                <span>This event has conflicts with other events. You may still create this event, but consider picking a new time if possible to avoid an overbooked schedule.</span>
+              </div>
+            </div>
+            <div v-if="eventIsLate(calendarEvent)">
+              <div style="display: inline-block">
+                <v-icon large color="red">info</v-icon>
+              </div>
+              <div style="display: inline-block">
+                <span>This event occurs late in the evening. You may still create this event, but consider picking a new day if to ensure you get your 8 hours of sleep.</span>
+              </div>
+            </div>
+          </template>
           <template slot="eventCreatePopoverCalendar" slot-scope="{ details }">
             <v-select
               style="width: 100%"
@@ -215,6 +233,40 @@ export default {
       this.state = state;
       this.app.setState(this.state);
     },
+
+    eventHasConflict(calendarEvent, calendar) {
+      if(!calendarEvent.start || !calendarEvent.end) {
+          return false;
+      }
+
+      const newEventStart = calendarEvent.start.time;
+      const newEventEnd = calendarEvent.end.time;
+
+      for(let index = 0; index < calendar.events.length; index++) {
+        let event = calendar.events[index].schedule;
+
+        if(!event.start || !event.end) {
+          continue;
+        }
+
+        let eventStart = event.start.time;
+        let eventEnd = event.start.time;
+
+        if(!eventStart && !eventEnd) {
+          continue;
+        }
+
+        if(newEventStart >= eventStart && newEventStart <= eventEnd) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+
+    eventIsLate(calendarEvent) {
+      return calendarEvent.start.hour < 3  || calendarEvent.end.hour < 5;
+    }
   },
   watch: {
     calendars: {
