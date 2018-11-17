@@ -314,4 +314,14 @@ body, html, #app, #dayspan
 
 .v-input__slot
   margin: 0!important
+
+.v-toolbar__title
+  display: flex
+
+.hidden-sm-and-down
+  vertical-align: middle
+  line-height: 48px
+
+.v-toolbar__content
+  padding-left: 10px!important
 </style>
