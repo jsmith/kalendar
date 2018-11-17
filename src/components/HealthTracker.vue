@@ -2,6 +2,7 @@
   <div class="progress-rings">
       <div class="ring">
         <progress-ring
+            :size="80"
             :progress="30"
             :total="100"
             icon="snooze">
@@ -9,6 +10,7 @@
       </div>
       <div class="ring">
         <progress-ring
+            :size="80"
             :progress="80"
             :total="100"
             icon="restaurant">
@@ -16,6 +18,7 @@
       </div>
       <div class="ring">
         <progress-ring
+            :size="80"
             :progress="60"
             :total="100"
             icon="directions_run">
@@ -89,9 +92,10 @@ export default class HealthTracker extends Vue {
 <style scoped lang="sass">
     .progress-rings
         display: flex
-        flex-direction: row
+        flex-direction: column
         align-items: stretch 
 
     .ring
-        margin: auto    
+        margin: auto
+        padding-top: 20px    
 </style>
