@@ -8,15 +8,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { Calendar } from 'dayspan';
 import Home from '@/views/Home.vue'
 
 @Component({
   components: { Home }
 })
-export default class App extends Vue {
-    public calendar = Calendar.months();
-}
+export default class App extends Vue { }
 </script>
 
 <style lang="scss">

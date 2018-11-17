@@ -2,9 +2,9 @@
   <v-app id="dayspan" v-cloak>
 
     <ds-calendar-app ref="app"
-                     :calendar="calendar"
-                     :read-only="readOnly"
-                     @change="saveState">
+      :calendar="calendar"
+      :read-only="readOnly"
+      @change="saveState">
 
       <template slot="title">
         DaySpan
@@ -64,269 +64,93 @@
 </template>
 
 <script>
-    import { Calendar, Weekday, Month } from 'dayspan';
-    import Vue from 'vue';
+import { Calendar, Weekday, Month } from 'dayspan';
+import Default from '@/default'
+import Vue from 'vue';
 
+export default {
+  name: 'app',
 
-    export default {
+  data: () => ({
+      storeKey: 'dayspanState',
+      calendar: Calendar.months(),
+      readOnly: false,
+      defaultEvents: Default
+  }),
 
-        name: 'app',
+  mounted()
+  {
+      window.app = this.$refs.app;
 
-        data: () => ({
-            storeKey: 'dayspanState',
-            calendar: Calendar.months(),
-            readOnly: false,
-            defaultEvents: [
-                {
-                    data: {
-                        title: 'Weekly Meeting',
-                        color: '#3F51B5'
-                    },
-                    schedule: {
-                        dayOfWeek: [Weekday.MONDAY],
-                        times: [9],
-                        duration: 30,
-                        durationUnit: 'minutes'
-                    }
-                },
-                {
-                    data: {
-                        title: 'First Weekend',
-                        color: '#4CAF50'
-                    },
-                    schedule: {
-                        weekspanOfMonth: [0],
-                        dayOfWeek: [Weekday.FRIDAY],
-                        duration: 3,
-                        durationUnit: 'days'
-                    }
-                },
-                {
-                    data: {
-                        title: 'End of Month',
-                        color: '#000000'
-                    },
-                    schedule: {
-                        lastDayOfMonth: [1],
-                        duration: 1,
-                        durationUnit: 'hours'
-                    }
-                },
-                {
-                    data: {
-                        title: 'Mother\'s Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.MAY],
-                        dayOfWeek: [Weekday.SUNDAY],
-                        weekspanOfMonth: [1]
-                    }
-                },
-                {
-                    data: {
-                        title: 'New Year\'s Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.JANUARY],
-                        dayOfMonth: [1]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Inauguration Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.JANUARY],
-                        dayOfMonth: [20]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Martin Luther King, Jr. Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.JANUARY],
-                        dayOfWeek: [Weekday.MONDAY],
-                        weekspanOfMonth: [2]
-                    }
-                },
-                {
-                    data: {
-                        title: 'George Washington\'s Birthday',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.FEBRUARY],
-                        dayOfWeek: [Weekday.MONDAY],
-                        weekspanOfMonth: [2]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Memorial Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.MAY],
-                        dayOfWeek: [Weekday.MONDAY],
-                        lastWeekspanOfMonth: [0]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Independence Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.JULY],
-                        dayOfMonth: [4]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Labor Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.SEPTEMBER],
-                        dayOfWeek: [Weekday.MONDAY],
-                        lastWeekspanOfMonth: [0]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Columbus Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.OCTOBER],
-                        dayOfWeek: [Weekday.MONDAY],
-                        weekspanOfMonth: [1]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Veterans Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.NOVEMBER],
-                        dayOfMonth: [11]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Thanksgiving Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.NOVEMBER],
-                        dayOfWeek: [Weekday.THURSDAY],
-                        weekspanOfMonth: [3]
-                    }
-                },
-                {
-                    data: {
-                        title: 'Christmas Day',
-                        color: '#2196F3',
-                        calendar: 'US Holidays'
-                    },
-                    schedule: {
-                        month: [Month.DECEMBER],
-                        dayOfMonth: [25]
-                    }
-                }
-            ]
-        }),
+      this.loadState();
+  },
 
-        mounted()
-        {
-            window.app = this.$refs.app;
+  methods:
+      {
+          getCalendarTime(calendarEvent)
+          {
+              let sa = calendarEvent.start.format('a');
+              let ea = calendarEvent.end.format('a');
+              let sh = calendarEvent.start.format('h');
+              let eh = calendarEvent.end.format('h');
 
-            this.loadState();
-        },
+              if (calendarEvent.start.minute !== 0)
+              {
+                  sh += calendarEvent.start.format(':mm');
+              }
 
-        methods:
-            {
-                getCalendarTime(calendarEvent)
-                {
-                    let sa = calendarEvent.start.format('a');
-                    let ea = calendarEvent.end.format('a');
-                    let sh = calendarEvent.start.format('h');
-                    let eh = calendarEvent.end.format('h');
+              if (calendarEvent.end.minute !== 0)
+              {
+                  eh += calendarEvent.end.format(':mm');
+              }
 
-                    if (calendarEvent.start.minute !== 0)
-                    {
-                        sh += calendarEvent.start.format(':mm');
-                    }
+              return (sa === ea) ? (sh + ' - ' + eh + ea) : (sh + sa + ' - ' + eh + ea);
+          },
 
-                    if (calendarEvent.end.minute !== 0)
-                    {
-                        eh += calendarEvent.end.format(':mm');
-                    }
+          saveState()
+          {
+              let state = this.calendar.toInput(true);
+              let json = JSON.stringify(state);
 
-                    return (sa === ea) ? (sh + ' - ' + eh + ea) : (sh + sa + ' - ' + eh + ea);
-                },
+              localStorage.setItem(this.storeKey, json);
+          },
 
-                saveState()
-                {
-                    let state = this.calendar.toInput(true);
-                    let json = JSON.stringify(state);
+          loadState()
+          {
+              let state = {};
 
-                    localStorage.setItem(this.storeKey, json);
-                },
+              try
+              {
+                  let savedState = JSON.parse(localStorage.getItem(this.storeKey));
 
-                loadState()
-                {
-                    let state = {};
+                  if (savedState)
+                  {
+                      state = savedState;
+                      state.preferToday = false;
+                  }
+              }
+              catch (e)
+              {
+                  // eslint-disable-next-line
+                  console.log( e );
+              }
 
-                    try
-                    {
-                        let savedState = JSON.parse(localStorage.getItem(this.storeKey));
+              if (!state.events || !state.events.length)
+              {
+                  state.events = this.defaultEvents;
+              }
 
-                        if (savedState)
-                        {
-                            state = savedState;
-                            state.preferToday = false;
-                        }
-                    }
-                    catch (e)
-                    {
-                        // eslint-disable-next-line
-                        console.log( e );
-                    }
+              state.events.forEach(ev =>
+              {
+                  let defaults = this.$dayspan.getDefaultEventDetails();
 
-                    if (!state.events || !state.events.length)
-                    {
-                        state.events = this.defaultEvents;
-                    }
+                  ev.data = Vue.util.extend( defaults, ev.data );
+              });
 
-                    state.events.forEach(ev =>
-                    {
-                        let defaults = this.$dayspan.getDefaultEventDetails();
-
-                        ev.data = Vue.util.extend( defaults, ev.data );
-                    });
-
-                    this.$refs.app.setState( state );
-                }
-            }
-    }
+              this.$refs.app.setState( state );
+          }
+      }
+}
 </script>
 
 <style>
