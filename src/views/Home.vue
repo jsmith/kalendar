@@ -302,6 +302,7 @@ body, html, #app, #dayspan
 
 .v-navigation-drawer
   margin-top: 0!important
+  max-height: 100%!important
   z-index: 100!important
 
 .v-input__slot
