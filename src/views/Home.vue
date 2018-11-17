@@ -38,20 +38,20 @@
         >
           <template slot="eventCreatePopoverBodyTop" slot-scope="{ calendarEvent }">
             <div v-if="eventHasConflict(calendarEvent, calendar)">
-              <span>
-                <v-icon medium color="red">info</v-icon>
-              </span>
-              <span>
-                This event has conflicts with other events. You may still create this event, but consider picking a new time if possible to avoid an overbooked schedule.
-              </span>
+              <div style="display: inline-block">
+                <v-icon large color="red">info</v-icon>
+              </div>
+              <div style="display: inline-block">
+                <span>This event has conflicts with other events. You may still create this event, but consider picking a new time if possible to avoid an overbooked schedule.</span>
+              </div>
             </div>
             <div v-if="eventIsLate(calendarEvent)">
-              <span>
-                <v-icon medium color="red">info</v-icon>
-              </span>
-              <span>
-                This event occurs late in the evening. You may still create this event, but consider picking a new day if to ensure you get your 8 hours of sleep.
-              </span>
+              <div style="display: inline-block">
+                <v-icon large color="red">info</v-icon>
+              </div>
+              <div style="display: inline-block">
+                <span>This event occurs late in the evening. You may still create this event, but consider picking a new day if to ensure you get your 8 hours of sleep.</span>
+              </div>
             </div>
           </template>
           <template slot="eventCreatePopoverCalendar" slot-scope="{ details }">
